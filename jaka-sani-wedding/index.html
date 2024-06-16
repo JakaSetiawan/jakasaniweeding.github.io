@@ -342,7 +342,7 @@
           </div>
         </div>
         <div class="col-12" style="margin-top: 35px;">
-          <button class="btn btn-primary">Kirim</button>
+          <button class="btn btn-primary" type="submit" id="submit-data">Kirim</button>
         </div>
       </form>
       <div class="row d-flex justify-content-center mt-5">
@@ -582,6 +582,11 @@
         e.preventDefault();
         const data = new FormData(form);
         const action = e.target.action;
+        const btnsubmit = document.getElementById('submit-data');
+        btnsubmit.setAttribute("disabled", true);
+        btnsubmit.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                              <span role="status">Loading...</span>`;
+
         fetch(action, {
           method: 'POST',
           body: data,
@@ -589,6 +594,8 @@
           .then(() => {
             alert("Konfirmasi kehadiran berhasil terkirim!");
             loadRSVPData(true);
+            btnsubmit.removeAttribute("disabled");
+            btnsubmit.innerHTML = "Kirim";
           })
       });
 
@@ -606,7 +613,7 @@
             if (reset) rsvpList.innerHTML = ''; 
 
             data.forEach(function(row, index) {
-              if (index > 0 || start > 0) {  // Skip header row on first load
+              if ((index > 0 || start > 0) && row[4].length > 1) {  // Skip header row on first load
                 var nama = row[1];
                 var ucapan = row[4];
                 var waktu = new Date(row[0]);
